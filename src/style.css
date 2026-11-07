@@ -1,0 +1,158 @@
+:root{
+  --bg:#050506; --text:#fafafa; --muted:#a1a1aa; --faint:#71717a;
+  --glass:linear-gradient(155deg,rgba(255,255,255,.15),rgba(255,255,255,.05) 55%,rgba(255,255,255,.09));
+  --glass-in:rgba(255,255,255,.08); --glass-hover:rgba(255,255,255,.13); --glass-active:rgba(255,255,255,.19);
+  --rim:linear-gradient(140deg,rgba(255,255,255,.6),rgba(255,255,255,.07) 34%,rgba(255,255,255,.04) 66%,rgba(255,255,255,.34));
+  --hi:rgba(255,255,255,.22); --sh:0 24px 70px rgba(0,0,0,.55); --ring:rgba(255,255,255,.16);
+  --code:rgba(0,0,0,.4); --btn:#ffffff; --on-btn:#000;
+  --o1:rgba(255,255,255,.30); --o2:rgba(165,180,225,.32); --o3:rgba(255,255,255,.16);
+  --logo1:#ffffff; --logo2:#a8a8b3; --logo-ink:#000; --g:255,255,255;
+}
+:root[data-theme="light"]{
+  --bg:#e9ebf0; --text:#0b0c10; --muted:#5d606b; --faint:#8b8e99;
+  --glass:linear-gradient(155deg,rgba(255,255,255,.88),rgba(255,255,255,.5));
+  --glass-in:rgba(255,255,255,.65); --glass-hover:rgba(255,255,255,.9); --glass-active:#fff;
+  --rim:linear-gradient(140deg,rgba(255,255,255,1),rgba(255,255,255,.3) 40%,rgba(255,255,255,.3) 62%,rgba(255,255,255,.95));
+  --hi:rgba(255,255,255,1); --sh:0 18px 50px rgba(32,38,70,.14),0 0 0 1px rgba(20,25,40,.06); --ring:rgba(0,0,0,.1);
+  --code:rgba(255,255,255,.7); --btn:#0b0c10; --on-btn:#fff;
+  --o1:rgba(255,255,255,1); --o2:rgba(165,182,230,.6); --o3:rgba(205,205,222,.7);
+  --logo1:#2c2c33; --logo2:#000; --logo-ink:#fff; --g:0,0,0;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;overflow:hidden}
+body{background:var(--bg);color:var(--text);font:400 15px/1.65 "Inter","Segoe UI Variable Text","Segoe UI",system-ui,-apple-system,Roboto,Ubuntu,sans-serif;letter-spacing:-.011em;font-feature-settings:"cv11","ss01","calt";-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+button,input,select,textarea{font:inherit;color:inherit;letter-spacing:inherit}
+button{cursor:pointer;border:0;background:none}
+.ic{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+.logo{width:30px;height:30px;flex-shrink:0}
+.logo.big{width:60px;height:60px;filter:drop-shadow(0 16px 34px rgba(var(--g),.28))}
+kbd{margin-left:auto;font:500 11px ui-monospace,"SF Mono","Cascadia Code",Consolas,"DejaVu Sans Mono",monospace;color:var(--muted);background:var(--glass-in);border-radius:8px;padding:2px 7px;letter-spacing:0}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-thumb{background:var(--glass-active);border-radius:10px;border:3px solid transparent;background-clip:content-box}
+
+.bg{position:fixed;inset:0;overflow:hidden;z-index:0}
+.bg i{position:absolute;border-radius:50%;filter:blur(80px);animation:drift 24s ease-in-out infinite alternate}
+.bg i:nth-child(1){width:50vmax;height:50vmax;left:-14vmax;top:-20vmax;background:var(--o1)}
+.bg i:nth-child(2){width:46vmax;height:46vmax;right:-16vmax;top:6vh;background:var(--o2);animation-duration:30s}
+.bg i:nth-child(3){width:38vmax;height:38vmax;left:30vw;bottom:-24vmax;background:var(--o3);animation-duration:36s}
+@keyframes drift{from{transform:translate(0,0) scale(1)}to{transform:translate(5vmax,3vmax) scale(1.12)}}
+
+/* жидкое стекло: размытие + блик + граничная «кромка» */
+.sidebar,.model-wrap,.expand,.composer,.chip,.msg.user .body,.code,.plan,.new-chat{
+  position:relative;background:var(--glass);
+  -webkit-backdrop-filter:blur(30px) saturate(190%);backdrop-filter:blur(30px) saturate(190%);
+  box-shadow:inset 0 1px 0 var(--hi),var(--sh);
+}
+.sidebar::before,.model-wrap::before,.expand::before,.composer::before,.chip::before,.msg.user .body::before,.code::before,.plan::before,.new-chat::before{
+  content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;background:var(--rim);pointer-events:none;
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;
+}
+.plan,.new-chat{box-shadow:inset 0 1px 0 var(--hi);-webkit-backdrop-filter:none;backdrop-filter:none;background:var(--glass-in)}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  .sidebar,.model-wrap,.expand,.composer,.chip,.msg.user .body,.code{background:#17171b}
+  :root[data-theme="light"] .sidebar,:root[data-theme="light"] .composer,:root[data-theme="light"] .chip{background:#fff}
+}
+
+.app{position:relative;z-index:1;display:flex;height:100vh;padding:14px;gap:14px;overflow:hidden}
+.sidebar{width:280px;border-radius:30px;display:flex;flex-direction:column;padding:16px;gap:10px;flex-shrink:0;transition:margin .35s cubic-bezier(.3,.8,.3,1),opacity .3s}
+.app.collapsed .sidebar{margin-left:-306px;opacity:0}
+.brand{display:flex;align-items:center;gap:10px;padding:2px 2px 6px}
+.brand-name{font:700 19px/1 "Inter Display","Inter",sans-serif;letter-spacing:-.03em;flex:1}
+.badge{font:600 9.5px/1 "Inter",system-ui,sans-serif;letter-spacing:.09em;color:var(--on-btn);background:var(--btn);border-radius:999px;padding:4px 7px;margin-left:7px;vertical-align:2px}
+.icon-btn{width:36px;height:36px;border-radius:50%;color:var(--muted);display:flex;align-items:center;justify-content:center;transition:.2s}
+.icon-btn:hover{background:var(--glass-hover);color:var(--text)}
+.new-chat{display:flex;align-items:center;gap:10px;padding:12px 16px;border-radius:20px;font-weight:500;transition:.2s}
+.new-chat:hover{background:var(--glass-hover)}
+.search{display:flex;align-items:center;gap:10px;background:var(--glass-in);border-radius:20px;padding:0 16px;color:var(--muted);transition:.2s}
+.search:focus-within{color:var(--text);box-shadow:0 0 0 3px var(--ring)}
+.search input{flex:1;min-width:0;background:none;border:0;outline:none;padding:11px 0;font-size:14.5px}
+.search input::placeholder{color:var(--muted);opacity:.9}
+.list{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:2px;margin:0 -8px;padding:0 8px}
+.group{font-size:11px;font-weight:600;color:var(--faint);padding:16px 12px 6px;letter-spacing:.09em;text-transform:uppercase}
+.item{display:flex;align-items:center;border-radius:16px;padding:0 6px 0 14px;min-height:42px;transition:background .15s}
+.item:hover{background:var(--glass-hover)}
+.item.active{background:var(--glass-active);box-shadow:inset 0 1px 0 var(--hi),0 4px 14px rgba(var(--g),.06),0 0 0 1px rgba(var(--g),.07)}
+.item .t{flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;cursor:pointer;padding:10px 0;font-size:14.5px;font-weight:500}
+.item .t-input{flex:1;min-width:0;background:var(--glass-in);border:0;border-radius:12px;padding:6px 10px;outline:none;margin:4px 0;box-shadow:0 0 0 2px var(--ring)}
+.item .x{opacity:0;width:30px;height:30px;border-radius:50%;color:var(--muted);display:flex;align-items:center;justify-content:center}
+.item .x .ic{width:16px;height:16px}
+.item:hover .x{opacity:1}
+.item .x:hover{color:#ff6b6b;background:var(--glass-in)}
+.empty-list{color:var(--muted);font-size:14px;padding:12px}
+.plan{border-radius:22px;padding:13px 16px}
+.plan b{display:block;font:600 14px/1.3 "Inter Display","Inter",sans-serif}
+.plan span{font-size:12.5px;color:var(--muted)}
+.ghost{display:flex;align-items:center;gap:11px;width:100%;text-align:left;padding:11px 14px;border-radius:18px;color:var(--muted);font-weight:500;transition:.2s}
+.ghost:hover{background:var(--glass-hover);color:var(--text)}
+.side-bottom{display:flex;flex-direction:column;gap:6px}
+
+.main{flex:1;display:flex;flex-direction:column;min-width:0;position:relative}
+.top{display:flex;align-items:center;gap:10px;padding:0 0 10px}
+.expand{display:none;width:46px;height:46px;border-radius:50%;align-items:center;justify-content:center;color:var(--text)}
+.app.collapsed .expand{display:flex}
+.model-wrap{display:flex;align-items:center;border-radius:999px}
+.model{appearance:none;-webkit-appearance:none;background:none;border:0;font-weight:600;font-size:14.5px;padding:12px 40px 12px 22px;border-radius:999px;outline:none;cursor:pointer}
+.model option{background:#17171b;color:#fafafa}
+.chev{position:absolute;right:16px;width:15px;height:15px;color:var(--muted);pointer-events:none}
+
+.scroll{flex:1;overflow-y:auto;position:relative}
+.empty{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px 20px 60px;animation:fade .6s ease}
+.empty h1{font:700 54px/1.05 "Inter Display","Inter",sans-serif;letter-spacing:-.045em;margin:26px 0 12px;color:var(--text);text-align:center}
+.sub{color:var(--muted);margin:0 0 36px;font-size:16px;text-align:center}
+.chips{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;width:100%;max-width:660px}
+.chip{text-align:left;padding:18px 22px;border-radius:26px;line-height:1.45;transition:transform .3s cubic-bezier(.3,.8,.3,1),background .2s}
+.chip:hover{transform:translateY(-3px);background:var(--glass-active)}
+.chip b{display:block;font:600 15px/1.3 "Inter Display","Inter",sans-serif;letter-spacing:-.02em;margin-bottom:4px}
+.chip span{color:var(--muted);font-size:13.5px}
+.has-msgs .empty{display:none}
+
+.thread{max-width:780px;margin:0 auto;padding:6px 18px 30px}
+.msg{display:flex;gap:16px;margin:26px 0;position:relative}
+.msg.in{animation:rise .45s cubic-bezier(.3,.8,.3,1)}
+.msg.user{justify-content:flex-end}
+.msg.user .body{border-radius:26px 26px 8px 26px;padding:12px 22px;max-width:80%;white-space:pre-wrap;word-break:break-word;box-shadow:inset 0 1px 0 var(--hi),0 10px 30px rgba(0,0,0,.3)}
+.msg .av{width:32px;height:32px;flex-shrink:0;margin-top:1px}
+.msg.assistant .col{flex:1;min-width:0}
+.msg.assistant .body{word-break:break-word;font-size:15.5px;line-height:1.75}
+.actions{display:flex;gap:2px;margin-top:10px;opacity:0;transition:.2s}
+.msg:hover .actions{opacity:1}
+.act{display:flex;align-items:center;gap:6px;color:var(--muted);font-size:12.5px;font-weight:500;padding:6px 12px;border-radius:999px}
+.act:hover{background:var(--glass-hover);color:var(--text)}
+.act .ic{width:15px;height:15px}
+.body p{margin:0 0 .85em}
+.body p:last-child{margin-bottom:0}
+.body ul{margin:0 0 .85em;padding-left:1.4em}
+.body li{margin:.3em 0}
+.body h3,.body h4,.body h5{margin:1.2em 0 .4em;font-family:"Inter Display","Inter",sans-serif;font-weight:600;letter-spacing:-.025em}
+.body code{background:var(--glass-in);border-radius:8px;padding:2px 7px;font:500 .86em ui-monospace,"SF Mono","Cascadia Code",Consolas,"DejaVu Sans Mono",monospace;letter-spacing:0}
+.code{background:var(--code);border-radius:22px;overflow:hidden;margin:1em 0;box-shadow:none}
+.code-head{display:flex;justify-content:space-between;align-items:center;padding:10px 18px;font-size:12.5px;font-weight:500;color:var(--muted);border-bottom:1px solid rgba(var(--g),.08)}
+.copy{font-size:12.5px;font-weight:500;color:var(--muted);padding:4px 10px;border-radius:999px}
+.copy:hover{color:var(--text);background:var(--glass-hover)}
+.code pre{margin:0;padding:16px 20px;overflow-x:auto;line-height:1.7;font-size:13.5px}
+.code pre code{background:none;padding:0;font-size:13.5px;line-height:1.7}
+
+.typing{display:flex;gap:6px;padding:12px 0}
+.typing i{width:8px;height:8px;border-radius:50%;background:var(--muted);animation:dot 1.1s infinite ease-in-out}
+.typing i:nth-child(2){animation-delay:.15s}
+.typing i:nth-child(3){animation-delay:.3s}
+
+.composer-wrap{max-width:780px;width:100%;margin:0 auto;padding:6px 4px 0}
+.composer{display:flex;align-items:flex-end;gap:10px;border-radius:34px;padding:10px 10px 10px 26px;transition:box-shadow .25s}
+.composer:focus-within{box-shadow:inset 0 1px 0 var(--hi),0 0 0 4px var(--ring),var(--sh)}
+.composer textarea{flex:1;background:none;border:0;outline:none;resize:none;max-height:200px;padding:11px 0;line-height:1.5;font-size:15.5px}
+.composer textarea::placeholder{color:var(--faint)}
+.send{width:44px;height:44px;border-radius:50%;background:var(--btn);color:var(--on-btn);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 6px 20px rgba(var(--g),.18);transition:transform .25s,background .2s}
+.send:hover:not(:disabled){transform:scale(1.07)}
+.send:disabled{background:var(--glass-in);color:var(--muted);box-shadow:none;cursor:default}
+.note{text-align:center;color:var(--faint);font-size:12px;margin:12px 0 2px}
+
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+@keyframes dot{0%,80%,100%{opacity:.25;transform:scale(.8)}40%{opacity:1;transform:scale(1)}}
+
+@media (max-width:760px){
+  .sidebar{position:absolute;left:14px;top:14px;bottom:14px;z-index:5}
+  .chips{grid-template-columns:1fr}
+  .empty h1{font-size:38px}
+}

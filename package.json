@@ -1,0 +1,15 @@
+{
+  "name": "enet-ai",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "tauri dev",
+    "build": "tauri build",
+    "build:windows": "tauri build --bundles nsis",
+    "build:linux": "tauri build --bundles deb"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2",
+    "@fontsource/inter": "^5.2.0"
+  }
+}
